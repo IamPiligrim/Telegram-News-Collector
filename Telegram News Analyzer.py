@@ -29,12 +29,12 @@ async def process_dialog(dialog):
     mcount = 0
     async with semaphore:
         try:
+            fetch = await telegram.get_messages(dialog,limit=1)
             message_zero = await telegram.get_messages(
                 dialog,
-                min_id=dialog.dialog.read_inbox_max_id,
-                reverse=True,
+                limit=fetch[0].id - dialog.dialog.read_inbox_max_id,
             )
-            for i in range(len(message_zero)):
+            for i in message_zero:
                 if not message_zero:
                     return
 
@@ -65,9 +65,9 @@ async def process_dialog(dialog):
 
     Если есть сомнения — отвечай НЕТ.
 
-    Сообщение:""" + message_zero[i].text
+    Сообщение:""" + i.text
 
-                if len(message_zero[i].text) <= 30:
+                if len(i.text) <= 0:
                     continue
 
                 # run blocking OpenRouter call in thread
@@ -97,8 +97,8 @@ async def process_dialog(dialog):
                 
                 if response.choices[0].message.content.lower() == "да":
                     entity = await telegram.get_entity(dialog)
-                    olink = f"https://t.me/{entity.username}/{message_zero[i].id}"
-                    output.append(olink + "\n" + message_zero[i].text + "\n" + "-------" + "\n")
+                    olink = f"https://t.me/{entity.username}/{i.id}"
+                    output.append(olink + "\n" + i.text + "\n" + "-------" + "\n")
                     with open('output.txt', 'w', encoding='utf-8') as file:
                         file.writelines(output)
                 mcount += 1;
@@ -106,8 +106,9 @@ async def process_dialog(dialog):
             async with lock:
                 price += price_input + price_output
                 count += 1
-
+                entity = await telegram.get_entity(dialog)
                 print(
+                    f'Message: https://t.me/{entity.username}/{i.id} \n'
                     f'Output: "{response.choices[0].message.content}"\n'
                     f'Price: ${price:.8f}\n'
                 )
