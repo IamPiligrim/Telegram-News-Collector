@@ -4,8 +4,8 @@ Now, to actually run this thing you need three things:
 1. A telegram api and hash. Those you can get under "Api Development Tools" on https://my.telegram.org
 2. An OpenRouter account. Those are actually free over at https://openrouter.ai. But in the code by default I put llama 3.1 which is NOT FREE.
 If you want to use a free LLM (such as deepseek V4 flash (free) you will need to manualy change the "model" value on line 76 to your preferred model (a good one is "deepseek/deepseek-v4-flash:free")
-One you have those, you will need to paste your telegram api, telegram hash and OpenRouter key into their respective values (first 12 lines, you won't miss em)
 
+Once you have those, you will need to paste your telegram api, telegram hash and OpenRouter key into their respective values (lines 7,8 and 12, you won't miss em)
 The program runs in cmd 'cause I can't be FUCKED making an interface for that shit. Fuck you.
 
 
